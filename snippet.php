@@ -32,22 +32,22 @@ function change_entry_creator_trashed ( $entry_id ) {
 	
 	$table = GFFormsModel::get_entry_table_name();
 	
-  //Get user meta of the user removing entry from their list.
+  	//Get user meta of the user removing entry from their list.
 	$user = wp_get_current_user();
 	
 	$old_creator_id = $wpdb->get_var( $wpdb->prepare( "SELECT created_by from $table where id = %d", $entry_id ) );
 	
 	$old_creator = get_userdata( $old_creator_id );
   
-  //Add a note to the entry that the entry was removed from their list.
+ 	 //Add a note to the entry that the entry was removed from their list.
 	GFFormsModel::add_note( $entry_id, $user->ID, $user->user_login, $old_creator->display_name . ' removed entry from their list of referrals.');
   
-  //Change USER_ID to the ID of the WordPress user you want the entries to be assigned to.
+  	//Change USER_ID to the ID of the WordPress user you want the entries to be assigned to.
 	GFAPI::update_entry_property( $entry_id, 'created_by', USER_ID );
   
-  //Untrash the entry and set its status to 'Active'.
+  	//Untrash the entry and set its status to 'Active'.
 	$trashed = GFAPI::update_entry_property( $entry_id, 'status', 'active', false, true );
   
-  //return $trashed to run 'Trashed' GravityView delete entry filter.
+  	//return $trashed to run 'Trashed' GravityView delete entry filter.
 	return $trashed;
 }
